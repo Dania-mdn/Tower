@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Kran : MonoBehaviour
 {
+    public UI UI;
+
     public Transform Camera;
 
     public float speed = 0.05f;
@@ -14,12 +17,13 @@ public class Kran : MonoBehaviour
     public Transform leftborder;
     public Transform rightborder;
 
-    public GameObject CoobPrefab;
+    public GameObject[] CoobPrefab;
     public GameObject PositionNewFloor;
     public GameObject ReadyCoob;
     private Vector3 targetPosition;
 
     public Animation MoneyAnimation;
+    public Animation CameraAnimation;
 
     private void OnEnable()
     {
@@ -56,11 +60,11 @@ public class Kran : MonoBehaviour
 
         if (direction == -1)
         {
-            transformKran.position = new Vector3(transformKran.position.x - speed, transformKran.position.y, transformKran.position.z);
+            transformKran.position = new Vector3(transformKran.position.x - (speed + UI.floor / 100), transformKran.position.y, transformKran.position.z);
         }
         else if(direction == 1)
         {
-            transformKran.position = new Vector3(transformKran.position.x + speed, transformKran.position.y, transformKran.position.z);
+            transformKran.position = new Vector3(transformKran.position.x + (speed + UI.floor / 100), transformKran.position.y, transformKran.position.z);
         }
 
         if(transform.position != targetPosition)
@@ -78,13 +82,18 @@ public class Kran : MonoBehaviour
     {
         if(ReadyCoob == null)
         {
-            ReadyCoob = Instantiate(CoobPrefab, PositionNewFloor.transform.position, Quaternion.identity, PositionNewFloor.transform);
+            ReadyCoob = Instantiate(CoobPrefab[UI.floor], PositionNewFloor.transform.position, Quaternion.identity, PositionNewFloor.transform);
         }
     }
     public void SetMoveCamera()
     {
         targetPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
         MoneyAnimation.Play();
+        CameraAnimation.Play();
+    }
+    public void Restart()
+    {
+        SceneManager.LoadScene(0);
     }
     public void SetStart() => isStart = true;
 }
