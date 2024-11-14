@@ -4,8 +4,19 @@ using UnityEngine;
 
 public class coob : MonoBehaviour
 {
+    public GameObject Rule;
+
     private Quaternion initialRotation; // Начальный поворот объекта
     public float rotationThreshold = 50f; // Угол в градусах для проверки
+
+    private void OnEnable()
+    {
+        EventManager.Colission += OffRule;
+    }
+    private void OnDisable()
+    {
+        EventManager.Colission += OffRule;
+    }
 
     void Start()
     {
@@ -23,5 +34,13 @@ public class coob : MonoBehaviour
         {
             EventManager.DoEndGame();
         }
+    }
+    public void SetRule(bool active)
+    {
+        Rule.SetActive(active);
+    }
+    public void OffRule()
+    {
+        SetRule(false);
     }
 }

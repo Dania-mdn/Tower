@@ -18,6 +18,7 @@ public class UI : MonoBehaviour
     public GameObject EndGame;
 
     public int floor = 0;
+    public Kran Kran;
 
     private void OnEnable()
     {
@@ -38,21 +39,21 @@ public class UI : MonoBehaviour
         }
         else
         {
-            Money = 0;
+            Money = 5000;
         }
         MoneyText.text = Money.ToString();
         CubeCount = 0;
-        Slider.maxValue = 10;
+        Slider.maxValue = 20;
         Slider.value = 0;
     }
 
-    private void SetNewFloor()
+    public void SetNewFloor()
     {
         Money = Money + 5;
         MoneyText.text = Money.ToString();
         CubeCount = CubeCount + 1;
         CubeCountText.text = CubeCount.ToString();
-        if(Slider.value < 10)
+        if(Slider.value < 20)
         {
             Slider.value = Slider.value + 1;
         }
@@ -60,6 +61,8 @@ public class UI : MonoBehaviour
         {
             Slider.value = 0;
             floor++;
+            Kran.floor = floor;
+            Kran.SetNewLvl();
         }
         PlayerPrefs.SetInt("Money", Money);
     }
@@ -81,5 +84,22 @@ public class UI : MonoBehaviour
         }
 
         BestCubeCountText.text = "BeastScore: " + PlayerPrefs.GetInt("CubeCount").ToString();
+    }
+    public bool Buy(int prece)
+    {
+        if(Money - prece >= 0)
+        {
+            Money = Money - prece;
+            MoneyText.text = Money.ToString();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public void DeleteSave()
+    {
+        PlayerPrefs.DeleteAll();
     }
 }

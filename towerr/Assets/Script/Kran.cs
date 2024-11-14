@@ -16,10 +16,14 @@ public class Kran : MonoBehaviour
     private int direction = 0;
     public Transform leftborder;
     public Transform rightborder;
+    public int floor;
 
+    public Animation Duble;
+    public GameObject BazeCoob;
     public GameObject[] CoobPrefab;
     public GameObject PositionNewFloor;
     public GameObject ReadyCoob;
+    private GameObject LastCoob;
     private Vector3 targetPosition;
 
     public Animation MoneyAnimation;
@@ -36,6 +40,7 @@ public class Kran : MonoBehaviour
 
     private void Start()
     {
+        LastCoob = BazeCoob;
         transformKran = KranGO.GetComponent<Transform>();
         targetPosition = transform.position;
     }
@@ -60,11 +65,11 @@ public class Kran : MonoBehaviour
 
         if (direction == -1)
         {
-            transformKran.position = new Vector3(transformKran.position.x - (speed + UI.floor / 100), transformKran.position.y, transformKran.position.z);
+            transformKran.position = new Vector3(transformKran.position.x - (speed * Time.deltaTime), transformKran.position.y, transformKran.position.z);
         }
         else if(direction == 1)
         {
-            transformKran.position = new Vector3(transformKran.position.x + (speed + UI.floor / 100), transformKran.position.y, transformKran.position.z);
+            transformKran.position = new Vector3(transformKran.position.x + (speed * Time.deltaTime), transformKran.position.y, transformKran.position.z);
         }
 
         if(transform.position != targetPosition)
@@ -74,15 +79,32 @@ public class Kran : MonoBehaviour
     }
     public void Build()
     {
-        ReadyCoob.transform.parent = null;
-        ReadyCoob.GetComponent<Rigidbody>().isKinematic = false;
-        ReadyCoob = null;
+        if (ReadyCoob != null)
+        {
+            if(Mathf.Abs(LastCoob.transform.position.x - ReadyCoob.transform.position.x) <= 0.1f)
+            {
+                Duble.Play();
+                UI.SetNewFloor();
+            }
+
+            LastCoob = ReadyCoob;
+            ReadyCoob.transform.parent = null;
+            ReadyCoob.GetComponent<Rigidbody>().isKinematic = false;
+            ReadyCoob = null;
+        }
     }
     public void SetNewCoob()
     {
         if(ReadyCoob == null)
         {
-            ReadyCoob = Instantiate(CoobPrefab[UI.floor], PositionNewFloor.transform.position, Quaternion.identity, PositionNewFloor.transform);
+            if(floor < CoobPrefab.Length-1)
+            {
+                ReadyCoob = Instantiate(CoobPrefab[floor], PositionNewFloor.transform.position, Quaternion.identity, PositionNewFloor.transform);
+            }
+            else
+            {
+                ReadyCoob = Instantiate(CoobPrefab[CoobPrefab.Length-1], PositionNewFloor.transform.position, Quaternion.identity, PositionNewFloor.transform);
+            }
         }
     }
     public void SetMoveCamera()
@@ -90,6 +112,39 @@ public class Kran : MonoBehaviour
         targetPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
         MoneyAnimation.Play();
         CameraAnimation.Play();
+    }
+    public void SetNewLvl()
+    {
+        LastCoob.GetComponent<Rigidbody>().isKinematic = true;
+    }
+    public void SetRule()
+    {
+        if (UI.Buy(200))
+        {
+            LastCoob.GetComponent<coob>().SetRule(true);
+        }
+    }
+    public void SetHold()
+    {
+
+        if (UI.Buy(400))
+        {
+
+        }
+    }
+    public void SetFisxed()
+    {
+        if (UI.Buy(700))
+        {
+            LastCoob.GetComponent<Rigidbody>().isKinematic = true;
+        }
+    }
+    public void SetTimeSlou()
+    {
+        if (UI.Buy(900))
+        {
+            speed = speed / 2;
+        }
     }
     public void Restart()
     {
