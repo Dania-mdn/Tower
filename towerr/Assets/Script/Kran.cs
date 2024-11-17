@@ -9,7 +9,7 @@ public class Kran : MonoBehaviour
 
     public Transform Camera;
 
-    public float speed = 0.05f;
+    public float speed;
     public GameObject KranGO;
     private Transform transformKran;
     public bool isStart = false;
@@ -17,15 +17,19 @@ public class Kran : MonoBehaviour
     public Transform leftborder;
     public Transform rightborder;
     public int floor;
+    private int DablCoef = 1;
 
-    public Animation Duble;
     public GameObject BazeCoob;
     public GameObject[] CoobPrefab;
     public GameObject PositionNewFloor;
     public GameObject ReadyCoob;
     private GameObject LastCoob;
     private Vector3 targetPosition;
+    private GameObject[] CoobArray;
+    private GameObject FixedCoob;
+    private bool isHold = false;
 
+    public Animation Duble;
     public Animation MoneyAnimation;
     public Animation CameraAnimation;
 
@@ -43,6 +47,8 @@ public class Kran : MonoBehaviour
         LastCoob = BazeCoob;
         transformKran = KranGO.GetComponent<Transform>();
         targetPosition = transform.position;
+        CoobArray = new GameObject[10];
+        FixedCoob = LastCoob;
     }
     private void Update()
     {
@@ -84,13 +90,27 @@ public class Kran : MonoBehaviour
             if(Mathf.Abs(LastCoob.transform.position.x - ReadyCoob.transform.position.x) <= 0.1f)
             {
                 Duble.Play();
-                UI.SetNewFloor();
+                UI.SetDabl(5 * DablCoef);
+                DablCoef = DablCoef + 1;
+            }
+            else
+            {
+                DablCoef = 1;
             }
 
             LastCoob = ReadyCoob;
             ReadyCoob.transform.parent = null;
             ReadyCoob.GetComponent<Rigidbody>().isKinematic = false;
             ReadyCoob = null;
+
+            for (int i = 0; i < CoobArray.Length; i++)
+            {
+                if(CoobArray[i] == null)
+                {
+                    CoobArray[i] = LastCoob;
+                    return;
+                }
+            }
         }
     }
     public void SetNewCoob()
@@ -112,10 +132,28 @@ public class Kran : MonoBehaviour
         targetPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
         MoneyAnimation.Play();
         CameraAnimation.Play();
+
+        if(isHold == true)
+        {
+            for (int i = 0; i < CoobArray.Length; i++)
+            {
+                if(CoobArray[i] != null)
+                    CoobArray[i].GetComponent<coob>().targetCube = null;
+            }
+            isHold = false;
+        }
     }
     public void SetNewLvl()
     {
+        LastCoob.GetComponent<coob>().Vertikal();
         LastCoob.GetComponent<Rigidbody>().isKinematic = true;
+        speed = speed + (speed / 3);
+        FixedCoob = LastCoob;
+
+        for (int i = 0; i < CoobArray.Length; i++)
+        {
+            CoobArray[i] = null;
+        }
     }
     public void SetRule()
     {
@@ -126,17 +164,30 @@ public class Kran : MonoBehaviour
     }
     public void SetHold()
     {
-
         if (UI.Buy(400))
         {
-
+            for (int i = 0; i < CoobArray.Length; i++)
+            {
+                if (CoobArray[i] != null)
+                {
+                    CoobArray[i].GetComponent<coob>().targetCube = FixedCoob.transform;
+                }
+            }
+            isHold = true;
         }
     }
     public void SetFisxed()
     {
         if (UI.Buy(700))
         {
+            LastCoob.GetComponent<coob>().Vertikal();
             LastCoob.GetComponent<Rigidbody>().isKinematic = true;
+            FixedCoob = LastCoob;
+
+            for (int i = 0; i < CoobArray.Length; i++)
+            {
+                CoobArray[i] = null;
+            }
         }
     }
     public void SetTimeSlou()

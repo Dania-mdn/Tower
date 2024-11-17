@@ -19,6 +19,7 @@ public class UI : MonoBehaviour
 
     public int floor = 0;
     public Kran Kran;
+    public TextMeshProUGUI DablCoefText;
 
     private void OnEnable()
     {
@@ -43,7 +44,7 @@ public class UI : MonoBehaviour
         }
         MoneyText.text = Money.ToString();
         CubeCount = 0;
-        Slider.maxValue = 20;
+        Slider.maxValue = 10;
         Slider.value = 0;
     }
 
@@ -53,7 +54,7 @@ public class UI : MonoBehaviour
         MoneyText.text = Money.ToString();
         CubeCount = CubeCount + 1;
         CubeCountText.text = CubeCount.ToString();
-        if(Slider.value < 20)
+        if(Slider.value < 10)
         {
             Slider.value = Slider.value + 1;
         }
@@ -65,6 +66,13 @@ public class UI : MonoBehaviour
             Kran.SetNewLvl();
         }
         PlayerPrefs.SetInt("Money", Money);
+    }
+    public void SetDabl(int coin)
+    {
+        Money = Money + coin;
+        MoneyText.text = Money.ToString();
+        PlayerPrefs.SetInt("Money", Money);
+        DablCoefText.text =  ("DUBLE X" + coin/5).ToString();
     }
     private void SetEndGame()
     {
