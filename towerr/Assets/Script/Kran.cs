@@ -32,6 +32,7 @@ public class Kran : MonoBehaviour
     public Animation Duble;
     public Animation MoneyAnimation;
     public Animation CameraAnimation;
+    public Animation KranAnimation;
 
     private void OnEnable()
     {
@@ -87,7 +88,8 @@ public class Kran : MonoBehaviour
     {
         if (ReadyCoob != null)
         {
-            if(Mathf.Abs(LastCoob.transform.position.x - ReadyCoob.transform.position.x) <= 0.1f)
+            KranAnimation.Play("Scene");
+            if (Mathf.Abs(LastCoob.transform.position.x - ReadyCoob.transform.position.x) <= 0.1f)
             {
                 Duble.Play();
                 UI.SetDabl(5 * DablCoef);
@@ -111,18 +113,21 @@ public class Kran : MonoBehaviour
                     return;
                 }
             }
+
         }
     }
     public void SetNewCoob()
     {
         if(ReadyCoob == null)
         {
-            if(floor < CoobPrefab.Length-1)
+            if (floor < CoobPrefab.Length-1)
             {
+                KranAnimation.Play("Scene 1");
                 ReadyCoob = Instantiate(CoobPrefab[floor], PositionNewFloor.transform.position, Quaternion.identity, PositionNewFloor.transform);
             }
             else
             {
+                KranAnimation.Play("Scene 1");
                 ReadyCoob = Instantiate(CoobPrefab[CoobPrefab.Length-1], PositionNewFloor.transform.position, Quaternion.identity, PositionNewFloor.transform);
             }
         }
