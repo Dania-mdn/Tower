@@ -21,15 +21,31 @@ public class UI : MonoBehaviour
     public Kran Kran;
     public TextMeshProUGUI DablCoefText;
 
+    public Toggle TogglAudio;
+    private bool isMuteAudio;
+    public AudioSource A0;
+    public AudioSource A1;
+    public AudioSource A2;
+    public AudioSource A3;
+    public AudioSource A4;
+    public AudioSource A5;
+    public AudioSource A6;
+    public AudioSource A7;
+    public AudioSource A8;
+
     private void OnEnable()
     {
         EventManager.Colission += SetNewFloor;
         EventManager.EndGame += SetEndGame;
+        EventManager.MuteAudio += AudioMute;
+        EventManager.PlayAudio += AudioPlay;
     }
     private void OnDisable()
     {
         EventManager.Colission -= SetNewFloor;
         EventManager.EndGame -= SetEndGame;
+        EventManager.MuteAudio -= AudioMute;
+        EventManager.PlayAudio -= AudioPlay;
     }
 
     private void Start()
@@ -106,8 +122,54 @@ public class UI : MonoBehaviour
             return false;
         }
     }
+    public void PausaOnn()
+    {
+        Time.timeScale = 0;
+    }
+    public void PausaOff()
+    {
+        Time.timeScale = 1;
+    }
     public void DeleteSave()
     {
         PlayerPrefs.DeleteAll();
+    }
+    public void Audio()
+    {
+        if (isMuteAudio == false)
+        {
+            isMuteAudio = true;
+            EventManager.DoMuteAudio();
+            PlayerPrefs.SetInt("MuteAudio", 1);
+        }
+        else
+        {
+            isMuteAudio = false;
+            EventManager.DoPlayAudio();
+            PlayerPrefs.DeleteKey("MuteAudio");
+        }
+    }
+    public void AudioMute()
+    {
+        A0.mute = true;
+        A1.mute = true;
+        A2.mute = true;
+        A3.mute = true;
+        A4.mute = true;
+        A5.mute = true;
+        A6.mute = true;
+        A7.mute = true;
+        A8.mute = true;
+    }
+    public void AudioPlay()
+    {
+        A0.mute = false;
+        A1.mute = false;
+        A2.mute = false;
+        A4.mute = false;
+        A5.mute = false;
+        A6.mute = false;
+        A7.mute = false;
+        A8.mute = false;
     }
 }

@@ -14,14 +14,20 @@ public class coob : MonoBehaviour
     public float smoothSpeed = 5f; // —корость выравнивани€
 
     public Animation Fixation;
+    public AudioSource boom;
+    public ParticleSystem PS;
 
     private void OnEnable()
     {
         EventManager.Colission += OffRule;
+        EventManager.MuteAudio += AudioMute;
+        EventManager.PlayAudio += AudioPlay;
     }
     private void OnDisable()
     {
         EventManager.Colission -= OffRule;
+        EventManager.MuteAudio -= AudioMute;
+        EventManager.PlayAudio -= AudioPlay;
     }
 
     void Start()
@@ -32,6 +38,14 @@ public class coob : MonoBehaviour
 
     void Update()
     {
+        if (PlayerPrefs.GetInt("MuteAudio") == 1)
+        {
+            AudioMute();
+        }
+        else
+        {
+            AudioPlay();
+        }
         // –ассчитываем угол между текущим и начальным поворотом
         float angleDifference = Quaternion.Angle(initialRotation, transform.rotation);
 
@@ -65,8 +79,18 @@ public class coob : MonoBehaviour
     {
         if (isReady)
         {
-            EventManager.DoColission();
+            boom.Play();
+            if(PS != null)
+                PS.Play();
             isReady = false;
+            if (collision.gameObject.tag == "Respawn")
+            {
+                EventManager.DoEndGame();
+            }
+            else
+            {
+                EventManager.DoColission();
+            }
         }
     }
     public void SetRule(bool active)
@@ -76,5 +100,13 @@ public class coob : MonoBehaviour
     public void OffRule()
     {
         SetRule(false);
+    }
+    public void AudioMute()
+    {
+        boom.mute = true;
+    }
+    public void AudioPlay()
+    {
+        boom.mute = false;
     }
 }

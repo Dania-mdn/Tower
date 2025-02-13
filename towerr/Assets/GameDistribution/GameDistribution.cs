@@ -40,7 +40,8 @@ public class GameDistribution : MonoBehaviour
 
         DontDestroyOnLoad(this);
 
-        Init();
+        Init(); 
+        ShowAd();
     }
 
     void Init()
