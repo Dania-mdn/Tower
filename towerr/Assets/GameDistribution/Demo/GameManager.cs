@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     public void OnResumeGame()
     {
-        if (Musick.isOn == false)
+        if (Musick.isOn == true)
         {
             EventManager.DoPlayAudio();
             PlayerPrefs.DeleteKey("MuteAudio");

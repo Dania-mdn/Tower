@@ -5,6 +5,7 @@ using TMPro;
 
 public class UI : MonoBehaviour
 {
+    public GameDistribution GameDistribution;
     public int Money;
     public TextMeshProUGUI MoneyText;
 
@@ -50,6 +51,7 @@ public class UI : MonoBehaviour
 
     private void Start()
     {
+        GameDistribution.ShowAd();
         if (PlayerPrefs.HasKey("Money"))
         {
             Money = PlayerPrefs.GetInt("Money");

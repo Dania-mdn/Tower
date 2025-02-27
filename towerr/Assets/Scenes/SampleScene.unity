@@ -959,6 +959,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78392535c4edeb549b545b69386ef3d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameDistribution: {fileID: 392217001}
   Money: 0
   MoneyText: {fileID: 380697336}
   CubeCount: 0
@@ -1911,6 +1912,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &392217001 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114328923287309288, guid: 225dcaec06282044993bb0c8b2a6c426,
+    type: 3}
+  m_PrefabInstance: {fileID: 1418480338}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1131192e25fdb2749a231294f114a8ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
